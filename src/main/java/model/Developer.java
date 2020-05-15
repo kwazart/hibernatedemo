@@ -5,18 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name="developers")
 public class Developer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "firstName")
     private String firstName;
@@ -25,10 +20,10 @@ public class Developer {
     private String lastName;
 
     @ManyToOne
-    @JoinColumn(name="specialty_id", insertable = false, updatable = false)
+    @JoinColumn(name="specialty_id", nullable = false)
     private Specialty specialty;
 
-    @ManyToMany(cascade = {CascadeType.ALL})
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "DeveloperSkills",
             joinColumns = { @JoinColumn(name = "developer_id") },
@@ -39,4 +34,14 @@ public class Developer {
     @Column(name="status")
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Override
+    public String toString() {
+        return  id +
+                "\t" + firstName + '\t' +
+                "\t" + lastName + '\t' +
+                "\t" + specialty +
+                "\t" + skills +
+                "\t" + status;
+    }
 }

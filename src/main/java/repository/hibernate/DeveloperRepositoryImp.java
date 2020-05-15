@@ -1,33 +1,29 @@
-package repository;
+package repository.hibernate;
 
-import connection.CreatorSF;
+import connection.HibernateUtil;
 import model.Developer;
-import model.Specialty;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import repository.DeveloperRepository;
 
-import javax.persistence.Query;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+
 import java.util.List;
 
-public class RepositoryDevelopers implements RepositoryCommon<Developer, Integer> {
+public class DeveloperRepositoryImp implements DeveloperRepository {
     private final SessionFactory factory;
 
-    public RepositoryDevelopers() {
-        factory = CreatorSF.getFactory();
+    public DeveloperRepositoryImp() {
+        factory = HibernateUtil.getFactory();
     }
 
     @Override
-    public Developer create(Developer developer) {
+    public Developer save(Developer developer) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
             session.save(developer);
             session.getTransaction().commit();
-            Query query = session.createQuery("FROM Developer firstName = '"
-                    + developer.getFirstName()
-                    + "' AND lastName = '"
-                    + developer.getLastName() + "';");
-            List<Developer> list = query.getResultList();
-            developer = list.get(0);
         } catch (Exception e) {
             System.out.println("Error into developer's creating method()");
         }
@@ -35,14 +31,28 @@ public class RepositoryDevelopers implements RepositoryCommon<Developer, Integer
     }
 
     @Override
-    public Developer read(Integer id) {
+    public Developer read(Long id) {
         Developer developer = null;
         try (Session session = factory.openSession()) {
-            developer =  session.get(Developer.class, id);
+            developer = session.get(Developer.class, id);
         } catch (Exception e) {
             System.out.println("Error into developer's reading method()");
         }
         return developer;
+    }
+
+    @Override
+    public List<Developer> getAll() {
+        List<Developer> developers = null;
+        try (Session session = factory.openSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Developer> criteria = builder.createQuery(Developer.class);
+            criteria.from(Developer.class);
+            developers = session.createQuery(criteria).getResultList();
+        } catch (Exception e) {
+            System.out.println("Error into developer's getAll method()");
+        }
+        return developers;
     }
 
     @Override
@@ -51,7 +61,6 @@ public class RepositoryDevelopers implements RepositoryCommon<Developer, Integer
             session.beginTransaction();
             session.update(developer);
             session.getTransaction().commit();
-            developer = session.get(Developer.class, developer.getId());
         } catch (Exception e) {
             System.out.println("Error into developer's updating method()");
         }

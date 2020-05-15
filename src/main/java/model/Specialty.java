@@ -5,18 +5,13 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Set;
 
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
-@Table(name="Specialties")
+@Table(name="specialties")
 public class Specialty {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -27,4 +22,11 @@ public class Specialty {
 
     @OneToMany(mappedBy = "specialty")
     private Set<Developer> developers;
+
+    @Override
+    public String toString() {
+        return id +
+                "\t" + name + '\t' +
+                "\t" + status;
+    }
 }

@@ -3,11 +3,11 @@ package connection;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class CreatorSF {
+public class HibernateUtil {
 
     private static SessionFactory factory;
 
-    private CreatorSF() {
+    private HibernateUtil() {
     }
 
     public static SessionFactory getFactory() {
@@ -17,4 +17,7 @@ public class CreatorSF {
         return factory;
     }
 
+    public static void closeSessionFactory() {
+        factory.close();
+    }
 }

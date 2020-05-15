@@ -1,31 +1,32 @@
-package repository;
+package repository.hibernate;
 
-import connection.CreatorSF;
+import connection.HibernateUtil;
 import model.Skill;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import javax.persistence.Query;
+import repository.GenericRepository;
+import repository.SkillRepository;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.util.List;
 
-public class RepositorySkills implements RepositoryCommon<Skill, Integer> {
+public class SkillRepositoryImp implements SkillRepository {
 
     private final SessionFactory factory;
 
-    public RepositorySkills() {
-        this.factory = CreatorSF.getFactory();
+    public SkillRepositoryImp() {
+        this.factory = HibernateUtil.getFactory();
     }
 
 
     @Override
-    public Skill create(Skill skill) {
+    public Skill save(Skill skill) {
         try (Session session = factory.openSession()) {
             session.beginTransaction();
-            session.save(skill);
+            session.saveOrUpdate(skill);
             session.getTransaction().commit();
-            Query query = session.createQuery("FROM Skill name = '" + skill.getName() + "';");
-            List<Skill> list = query.getResultList();
-            skill = list.get(0);
         } catch (Exception e) {
             System.out.println("Error into skill's creating method()");
         }
@@ -33,14 +34,28 @@ public class RepositorySkills implements RepositoryCommon<Skill, Integer> {
     }
 
     @Override
-    public Skill read(Integer id) {
+    public Skill read(Long id) {
         Skill skill = null;
         try (final Session session = factory.openSession()) {
-            skill =  session.get(Skill.class, id);
+            skill = session.get(Skill.class, id);
         } catch (Exception e) {
             System.out.println("Error into skill's reading method()");
         }
         return skill;
+    }
+
+    @Override
+    public List<Skill> getAll() {
+        List<Skill> skills = null;
+        try (Session session = factory.openSession()) {
+            CriteriaBuilder builder = session.getCriteriaBuilder();
+            CriteriaQuery<Skill> criteria = builder.createQuery(Skill.class);
+            criteria.from(Skill.class);
+            skills = session.createQuery(criteria).getResultList();
+        } catch (Exception e) {
+            System.out.println("Error into skill's getAll method()");
+        }
+        return skills;
     }
 
     @Override
@@ -49,7 +64,6 @@ public class RepositorySkills implements RepositoryCommon<Skill, Integer> {
             session.beginTransaction();
             session.update(skill);
             session.getTransaction().commit();
-            skill = session.get(Skill.class, skill.getId());
         } catch (Exception e) {
             System.out.println("Error into skill's updating method()");
         }

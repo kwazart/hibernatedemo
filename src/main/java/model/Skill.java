@@ -6,18 +6,13 @@ import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
-@Table(name="Skills")
+@Table(name="skills")
 public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private long id;
 
     @Column(name = "name")
     private String name;
@@ -28,4 +23,11 @@ public class Skill {
 
     @ManyToMany(mappedBy = "skills")
     private Set<Developer> developers = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return  id +
+                "\t" + name + '\t' +
+                "\t" + status;
+    }
 }
