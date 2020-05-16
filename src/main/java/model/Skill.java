@@ -27,7 +27,7 @@ public class Skill {
     @Override
     public String toString() {
         return  id +
-                "\t" + name + '\t' +
+                "\t" + name +
                 "\t" + status;
     }
 }
