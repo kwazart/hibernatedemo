@@ -20,6 +20,11 @@
         <version>5.2.10.Final</version>
     </dependency>
     <dependency>
+        <groupId>org.liquibase</groupId>
+        <artifactId>liquibase-core</artifactId>
+        <version>4.0.0-beta1</version>
+    </dependency>
+    <dependency>
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.18.10</version>
@@ -56,6 +61,21 @@
                 <source>11</source>
                 <target>11</target>
             </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-maven-plugin</artifactId>
+            <configuration>
+                <propertyFile>src/main/liquibase/liquibase.properties</propertyFile>
+            </configuration>
+            <executions>
+                <execution>
+                    <phase>process-resources</phase>
+                    <goals>
+                        <goal>update</goal>
+                    </goals>
+                </execution>
+            </executions>
         </plugin>
     </plugins>
 </build>

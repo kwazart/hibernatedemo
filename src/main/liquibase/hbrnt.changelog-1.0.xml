@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+<changeSet id="Creating Specialties" author="kwazarart">
+        <createTable tableName="SPECIALTIES">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(255)"/>
+            <column name="STATUS" type="varchar(20)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="Creating Skills" author="kwazarart">
+        <createTable tableName="SKILLS">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="NAME" type="varchar(255)"/>
+            <column name="STATUS" type="varchar(20)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="Creating Developers" author="kwazarart">
+        <createTable tableName="DEVELOPERS">
+            <column name="ID" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="FIRSTNAME" type="varchar(255)"/>
+            <column name="LASTNAME" type="varchar(255)"/>
+            <column name="SPECIALTY_ID" type="bigint"/>
+            <column name="STATUS" type="varchar(20)"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="FK_SPECIALTY_ID"
+                                 baseTableName="DEVELOPERS" baseColumnNames="SPECIALTY_ID"
+                                 referencedTableName="SPECIALTIES" referencedColumnNames="ID"
+        />
+    </changeSet>
+
+    <changeSet id="Create Connect Developer to Skills" author="kwazarart">
+        <createTable tableName="DEVELOPERSKILLS">
+            <column name="DEVELOPER_ID" type="bigint" />
+            <column name="SKILL_ID" type="bigint" />
+        </createTable>
+        <addForeignKeyConstraint constraintName="FK_DEVELOPER_ID"
+                                 baseTableName="DEVELOPERSKILLS" baseColumnNames="DEVELOPER_ID"
+                                 referencedTableName="DEVELOPERS" referencedColumnNames="ID"
+        />
+        <addForeignKeyConstraint constraintName="FK_SKILLS_ID"
+                                 baseTableName="DEVELOPERSKILLS" baseColumnNames="SKILL_ID"
+                                 referencedTableName="SKILLS" referencedColumnNames="ID"
+        />
+    </changeSet>
+
+</databaseChangeLog>
