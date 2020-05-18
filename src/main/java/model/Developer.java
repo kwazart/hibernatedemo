@@ -5,12 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
-@ToString
-@EqualsAndHashCode
-@NoArgsConstructor
-@AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Entity
 @Table(name="developers")
 public class Developer {
